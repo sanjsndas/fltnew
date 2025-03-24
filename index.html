@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheap Flight Tickets - Fly to Flights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1E90FF, #87CEEB);
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: url('https://images.unsplash.com/photo-1507608617758-e15e43e28618?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+            padding: 60px 15px;
+            text-align: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .phone-top {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+        }
+
+        .header .phone-top a {
+            color: #FFD700;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .header .phone-top a:hover {
+            color: #FFA500;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+        }
+
+        .header p {
+            font-size: 18px;
+        }
+
+        .rep-section {
+            text-align: center;
+            padding: 20px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            margin: -30px 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .rep-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #FFD700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            background: url('https://images.unsplash.com/photo-1534528744314-0b687ba632dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80') no-repeat center/cover;
+            background-size: cover; /* Ensure image fills the circle */
+            transition: transform 0.3s;
+        }
+
+        .rep-image:hover {
+            transform: scale(1.1);
+        }
+
+        .call-cta {
+            background: #FF4500;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .call-cta a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .intro, .destinations, .booking-form {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .intro:hover, .destinations:hover, .booking-form:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #1E90FF;
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .intro p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .destination-card {
+            background: #F0F8FF;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .destination-card:hover {
+            transform: scale(1.05);
+        }
+
+        .destination-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .destination-card h3 {
+            font-size: 20px;
+            color: #1E90FF;
+            margin-bottom: 5px;
+        }
+
+        .destination-card p {
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #1E90FF;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid #87CEEB;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #1E90FF;
+            outline: none;
+        }
+
+        .trip-type {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .trip-type label {
+            font-weight: normal;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trip-type input[type="radio"] {
+            width: auto;
+        }
+
+        #return-date-group {
+            display: none;
+        }
+
+        .search-btn {
+            background: #32CD32;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #228B22;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px 15px;
+            background: #1E90FF;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+        }
+
+        .footer a {
+            color: #FFD700;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #FFA500;
+        }
+
+        .dialog, .loading-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .dialog h2, .loading-dialog h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #FF4500;
+        }
+
+        .dialog p {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .dialog .call-btn {
+            background: #FF4500;
+            padding: 12px;
+            display: block;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .dialog .call-btn:hover {
+            background: #e03e00;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1E90FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+        }
+
+        @media (min-width: 768px) {
+            .header h1 { font-size: 42px; }
+            .header p { font-size: 20px; }
+            .rep-image { width: 180px; height: 180px; }
+            .intro p { font-size: 18px; }
+            .destination-card h3 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="phone-top">
+                <a href="tel:+1-860-706-8539">📞 +1-860-706-8539</a>
+            </div>
+            <h1>✈️ Cheap Flight Tickets</h1>
+            <p>Find the Best Deals with Fly to Flights</p>
+        </div>
+    </div>
+
+    <div class="rep-section">
+        <div class="rep-image"></div>
+        <div class="call-cta">
+            <a href="tel:+1-860-706-8539">📞 Speak to Our Expert: +1-860-706-8539</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="intro">
+            <h2>Travel the World Affordably</h2>
+            <p>At Fly to Flights, we bring you the cheapest flight tickets to destinations worldwide. Whether it’s a quick getaway or an international adventure, our expert team ensures you save big without compromising on quality.</p>
+            <p>Call our dedicated agents today to unlock exclusive offers tailored just for you!</p>
+        </div>
+
+        <div class="destinations">
+            <h2>Top Destinations</h2>
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Paris">
+                    <h3>Paris</h3>
+                    <p>From $349 - Discover the City of Love</p>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac914?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="London">
+                    <h3>London</h3>
+                    <p>From $299 - Explore Historic Charm</p>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1529963183134-0a8b6e8181a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Tokyo">
+                    <h3>Tokyo</h3>
+                    <p>From $599 - Experience Futuristic Vibes</p>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1485738422979-f5e516f53cb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="New York">
+                    <h3>New York</h3>
+                    <p>From $199 - The City That Never Sleeps</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-form">
+            <h2>Book Your Flight</h2>
+            <div class="trip-type">
+                <label><input type="radio" name="trip-type" value="round" checked onchange="toggleReturnDate()"> Round Trip</label>
+                <label><input type="radio" name="trip-type" value="one-way" onchange="toggleReturnDate()"> One Way</label>
+            </div>
+            <div class="form-group">
+                <label>From</label>
+                <input type="text" id="from-airport" list="from-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('from')">
+                <datalist id="from-options">
+                    <option value="">None</option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label>To</label>
+                <input type="text" id="to-airport" list="to-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('to')">
+                <datalist id="to-options">
+                    <option value="">None</option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label>Departure Date</label>
+                <input type="date" id="departure-date" value="2025-05-20">
+            </div>
+            <div class="form-group" id="return-date-group">
+                <label>Return Date</label>
+                <input type="date" id="return-date" value="2025-05-27">
+            </div>
+            <div class="form-group">
+                <label>Passengers</label>
+                <select id="passengers">
+                    <option selected>1 Adult</option>
+                    <option>2 Adults</option>
+                    <option>3 Adults</option>
+                    <option>4+ Adults</option>
+                </select>
+            </div>
+            <button class="search-btn" onclick="searchFlights()">Find Flights</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Fly to Flights. All Rights Reserved.</p>
+        <p>Contact Us: <a href="tel:+1-860-706-8539">+1-860-706-8539</a> | <a href="mailto:info@flytoflights.com">info@flytoflights.com</a></p>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="dialog" id="dialog">
+        <h2>✈️ No Flights Found</h2>
+        <p id="dialog-message"></p>
+        <p>Please call our support team for assistance:</p>
+        <a href="tel:+1-860-706-8539" class="call-btn">📞 Call: +1-860-706-8539</a>
+        <button onclick="hideDialog()" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 6px; margin-top: 15px; cursor: pointer;">Close</button>
+    </div>
+
+    <div class="loading-dialog" id="loading-dialog">
+        <h2>Searching for Best Flights</h2>
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Dialog functions
+        function showDialog(message) {
+            document.getElementById('dialog-message').textContent = message;
+            document.getElementById('dialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function hideDialog() {
+            document.getElementById('dialog').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
