@@ -520,119 +520,135 @@
     </div>
 
     <script>
-        // Dialog functions
-        function showDialog(message) {
-            document.getElementById('dialog-message').textContent = message;
-            document.getElementById('dialog').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+    // Dialog functions
+    function showDialog(message) {
+        document.getElementById('dialog-message').textContent = message;
+        document.getElementById('dialog').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function hideDialog() {
+        document.getElementById('dialog').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function showLoading() {
+        document.getElementById('loading-dialog').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading-dialog').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    document.getElementById('overlay').addEventListener('click', hideDialog);
+
+    // Toggle Return Date visibility
+    function toggleReturnDate() {
+        const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+        const returnDateGroup = document.getElementById('return-date-group');
+        returnDateGroup.style.display = tripType === 'round' ? 'block' : 'none';
+    }
+
+    // Search flights function with loading
+    function searchFlights() {
+        const fromInput = document.getElementById('from-airport').value;
+        const toInput = document.getElementById('to-airport').value;
+        if (!fromInput || !toInput) {
+            showDialog('Please select both "From" and "To" airports.');
+            return;
         }
 
-        function hideDialog() {
-            document.getElementById('dialog').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        function showLoading() {
-            document.getElementById('loading-dialog').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        function hideLoading() {
-            document.getElementById('loading-dialog').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        document.getElementById('overlay').addEventListener('click', hideDialog);
-
-        // Toggle Return Date visibility
-        function toggleReturnDate() {
+        showLoading();
+        setTimeout(() => {
+            hideLoading();
             const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-            const returnDateGroup = document.getElementById('return-date-group');
-            returnDateGroup.style.display = tripType === 'round' ? 'block' : 'none';
-        }
+            const from = fromInput || 'None';
+            const to = toInput || 'None';
+            const departureDate = document.getElementById('departure-date').value;
+            const returnDate = document.getElementById('return-date').value;
+            const passengers = document.getElementById('passengers').value;
 
-        // Search flights function with loading
-        function searchFlights() {
-            const fromInput = document.getElementById('from-airport').value;
-            const toInput = document.getElementById('to-airport').value;
-            if (!fromInput || !toInput) {
-                showDialog('Please select both "From" and "To" airports.');
-                return;
+            let message = '';
+            if (tripType === 'round') {
+                message = `No round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
+            } else {
+                message = `No one-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
             }
+            showDialog(message);
+        }, 3000);
+    }
 
-            showLoading();
-            setTimeout(() => {
-                hideLoading();
-                const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-                const from = fromInput || 'None';
-                const to = toInput || 'None';
-                const departureDate = document.getElementById('departure-date').value;
-                const returnDate = document.getElementById('return-date').value;
-                const passengers = document.getElementById('passengers').value;
+    // Fetch and populate airports
+    let allAirports = [];
+    async function loadAirports() {
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat');
+            if (!response.ok) throw new Error('Failed to fetch airports data');
+            const text = await response.text();
+            const lines = text.split('\n');
 
-                let message = '';
-                if (tripType === 'round') {
-                    message = `No round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
-                } else {
-                    message = `No one-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
+            allAirports = [];
+            lines.forEach(line => {
+                const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                const iata = parts[4]?.replace(/"/g, ''); // IATA code (column 5)
+                const name = parts[1]?.replace(/"/g, ''); // Airport name (column 2)
+                const city = parts[2]?.replace(/"/g, ''); // City (column 3)
+                if (iata && iata !== '\\N' && iata.length === 3 && name && city) {
+                    const optionText = `${city} (${iata}) - ${name}`;
+                    allAirports.push(optionText);
                 }
-                showDialog(message);
-            }, 3000);
+            });
+
+            allAirports.sort();
+            console.log('Loaded airports:', allAirports.length); // Debug log
+        } catch (error) {
+            console.error('Error loading airports:', error);
+            showDialog('Failed to load airport data. Please try again later.');
         }
+    }
 
-        // Fetch and populate airports
-        let allAirports = [];
-        async function loadAirports() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat');
-                if (!response.ok) throw new Error('Failed to fetch airports data');
-                const text = await response.text();
-                const lines = text.split('\n');
-
-                allAirports = [];
-                lines.forEach(line => {
-                    const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    const iata = parts[4]?.replace(/"/g, ''); // IATA code (column 5)
-                    const name = parts[1]?.replace(/"/g, ''); // Airport name (column 2)
-                    const city = parts[2]?.replace(/"/g, ''); // City (column 3)
-                    if (iata && iata !== '\\N' && iata.length === 3 && name && city) {
-                        const optionText = `${city} (${iata}) - ${name}`;
-                        allAirports.push(optionText);
-                    }
-                });
-
-                allAirports.sort();
-                console.log('Loaded airports:', allAirports.length); // Debug log
-            } catch (error) {
-                console.error('Error loading airports:', error);
-                showDialog('Failed to load airport data. Please try again later.');
-            }
-        }
-
-        function filterAirports(type) {
-            const input = document.getElementById(`${type}-airport`);
-            const datalist = document.getElementById(`${type}-options`);
-            const value = input.value.toLowerCase().trim();
-
-            datalist.innerHTML = '<option value="">None</option>'; // Reset with "None"
-
-            if (value.length >= 2) {
-                const filtered = allAirports.filter(airport => 
-                    airport.toLowerCase().includes(value)
-                );
-                filtered.forEach(airport => {
-                    const option = document.createElement('option');
-                    option.value = airport;
-                    datalist.appendChild(option);
-                });
-            }
-        }
-
-        // Load airports and set initial state on page load
-        window.onload = async function() {
-            await loadAirports();
-            toggleReturnDate();
+    // Debounced filter function
+    function debounce(func, delay) {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
         };
-    </script>
+    }
+
+    function filterAirports(type) {
+        const input = document.getElementById(`${type}-airport`);
+        const datalist = document.getElementById(`${type}-options`);
+        const value = input.value.toLowerCase().trim();
+
+        // Reset datalist with "None" option
+        datalist.innerHTML = '<option value="">None</option>';
+
+        if (value.length >= 2) {
+            const filtered = allAirports
+                .filter(airport => airport.toLowerCase().includes(value))
+                .slice(0, 20); // Limit to 20 results for performance
+
+            // Batch DOM updates
+            const optionsHTML = filtered.map(airport => `<option value="${airport}">`).join('');
+            datalist.innerHTML += optionsHTML;
+        }
+    }
+
+    // Debounced version of filterAirports
+    const debouncedFilterAirports = debounce(filterAirports, 300);
+
+    // Load airports and set initial state on page load
+    window.onload = async function() {
+        await loadAirports();
+        toggleReturnDate();
+
+        // Attach debounced event listeners
+        document.getElementById('from-airport').addEventListener('input', () => debouncedFilterAirports('from'));
+        document.getElementById('to-airport').addEventListener('input', () => debouncedFilterAirports('to'));
+    };
+</script>
 </body>
 </html>
