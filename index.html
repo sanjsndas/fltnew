@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fly to Flights</title>
+    <title>Cheap Flight Tickets - Fly to Flights</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
         }
 
         .header {
-            background: url('https://images.unsplash.com/photo-1500auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+            background: url('https://images.unsplash.com/photo-1507608617758-e15e43e28618?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
             padding: 60px 15px;
             text-align: center;
             color: white;
@@ -83,6 +83,22 @@
             z-index: 2;
         }
 
+        .rep-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #FFD700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            background: url('https://images.unsplash.com/photo-1534528744314-0b687ba632dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80') no-repeat center/cover;
+            background-size: cover;
+            transition: transform 0.3s;
+        }
+
+        .rep-image:hover {
+            transform: scale(1.1);
+        }
+
         .call-cta {
             background: #FF4500;
             padding: 15px 25px;
@@ -122,7 +138,6 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s;
-            overflow: visible; /* Prevent clipping of datalist */
         }
 
         .intro:hover, .destinations:hover, .booking-form:hover {
@@ -178,20 +193,77 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
 
         label {
+            font-size: 16px;
             font-weight: bold;
-            color: #1E90FF;
-            font-size: 14px;
             display: block;
             margin-bottom: 5px;
+            color: #333;
         }
 
-        input[type="text"],
-        input[type="date"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #87CEEB;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #1E90FF;
+            outline: none;
+        }
+
+        datalist {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        datalist option {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        datalist option:hover {
+            background-color: #f0f0f0;
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+            color: #007bff;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="date"]:hover,
+        input[type="date"]:focus {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+            outline: none;
+        }
+
         select {
             padding: 12px;
             border: 2px solid #87CEEB;
@@ -199,52 +271,11 @@
             font-size: 14px;
             width: 100%;
             transition: border-color 0.3s;
-            box-sizing: border-box;
-            background: white;
         }
 
-        input[type="text"]:focus,
-        input[type="date"]:focus,
         select:focus {
             border-color: #1E90FF;
             outline: none;
-        }
-
-        input[list] {
-            position: relative;
-            z-index: 10;
-        }
-
-        datalist {
-            position: absolute;
-            background: white;
-            border: 2px solid #87CEEB;
-            border-radius: 6px;
-            border-top: none;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 20;
-            top: 100%;
-            left: 0;
-            display: none;
-        }
-
-        input[list]:focus + datalist,
-        input[list]:active + datalist {
-            display: block;
-        }
-
-        datalist option {
-            padding: 8px;
-            font-size: 14px;
-            color: #333;
-            cursor: pointer;
-        }
-
-        datalist option:hover {
-            background: #f0f8ff;
-            color: #1E90FF;
         }
 
         .trip-type {
@@ -373,19 +404,19 @@
             z-index: 999;
         }
 
+        @media (min-width: 768px) {
+            .header h1 { font-size: 42px; }
+            .header p { font-size: 20px; }
+            .rep-image { width: 180px; height: 180px; }
+            .intro p { font-size: 18px; }
+            .destination-card h3 { font-size: 22px; }
+        }
         .responsive-img {
             width: 100%;
             max-width: 400px;
             height: auto;
             display: block;
             margin: 0 auto;
-        }
-
-        @media (min-width: 768px) {
-            .header h1 { font-size: 42px; }
-            .header p { font-size: 20px; }
-            .intro p { font-size: 18px; }
-            .destination-card h3 { font-size: 22px; }
         }
     </style>
 </head>
@@ -395,60 +426,60 @@
             <div class="phone-top">
                 <a href="tel:+1-860-706-8539">📞 +1-860-706-8539</a>
             </div>
-            <h1>✈️ Fly to Flights</h1>
+            <h1>✈️ Cheap Flight Tickets</h1>
             <p>Find the Best Deals with Fly to Flights</p>
         </div>
     </div>
 
     <div class="rep-section">
+        <img src="https://thesleepcompany.in/cdn/shop/files/Group_1000009184_1.webp?v=1741239071&width=500"
+             alt="Sleep Company Product" class="responsive-img">
         <div class="call-cta">
-            <a href="tel:+1-860-706-8539">📞 Speak to Our Expert:<br> +1-860-706-8539</a>
+            <a href="tel:+1-860-706-8539">📞 Speak to Our Expert: +1-860-706-8539</a>
         </div>
+    </div>
+    <div class="booking-form">
+        <h2>Book Your Flight</h2>
+        <div class="trip-type">
+            <label><input type="radio" name="trip-type" value="round" checked onchange="toggleReturnDate()"> Round Trip</label>
+            <label><input type="radio" name="trip-type" value="one-way" onchange="toggleReturnDate()"> One Way</label>
+        </div>
+        <div class="form-group">
+            <label>From</label>
+            <input type="text" id="from-airport" list="from-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('from')">
+            <datalist id="from-options">
+                <option value="">None</option>
+            </datalist>
+        </div>
+        <div class="form-group">
+            <label>To</label>
+            <input type="text" id="to-airport" list="to-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('to')">
+            <datalist id="to-options">
+                <option value="">None</option>
+            </datalist>
+        </div>
+        <div class="form-group">
+            <label for="departure-date">Departure Date</label>
+            <input type="date" id="departure-date" value="2025-05-20">
+        </div>
+
+        <div class="form-group" id="return-date-group">
+            <label for="return-date">Return Date</label>
+            <input type="date" id="return-date" value="2025-05-27">
+        </div>
+        <div class="form-group">
+            <label>Passengers</label>
+            <select id="passengers">
+                <option selected>1 Adult</option>
+                <option>2 Adults</option>
+                <option>3 Adults</option>
+                <option>4+ Adults</option>
+            </select>
+        </div>
+        <button class="search-btn" onclick="searchFlights()">Find Flights</button>
     </div>
 
     <div class="container">
-        <div class="booking-form">
-            <h2>Book Your Flight</h2>
-            <div class="trip-type">
-                <label><input type="radio" name="trip-type" value="round" checked onchange="toggleReturnDate()"> Round Trip</label>
-                <label><input type="radio" name="trip-type" value="one-way" onchange="toggleReturnDate()"> One Way</label>
-            </div>
-            <div class="form-group">
-                <label>From</label>
-                <input type="text" id="from-airport" list="from-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="debouncedFilterAirports('from')">
-                <datalist id="from-options">
-                    <option value="">None</option>
-                </datalist>
-            </div>
-            <div class="form-group">
-                <label>To</label>
-                <input type="text" id="to-airport" list="to-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="debouncedFilterAirports('to')">
-                <datalist id="to-options">
-                    <option value="">None</option>
-                </datalist>
-            </div>
-            <div class="form-group">
-                <label for="departure-date">Departure Date</label>
-                <input type="date" id="departure-date" value="2025-05-20">
-            </div>
-            <div class="form-group" id="return-date-group">
-                <label for="return-date">Return Date</label>
-                <input type="date" id="return-date" value="2025-05-27">
-            </div>
-            <div class="form-group">
-                <label>Passengers</label>
-                <select id="passengers">
-                    <option selected>1 Adult</option>
-                    <option>2 Adults</option>
-                    <option>3 Adults</option>
-                    <option>4+ Adults</option>
-                </select>
-            </div>
-            <button class="search-btn" onclick="searchFlights()">Find Flights</button>
-        </div>
-
-        <img src="https://thesleepcompany.in/cdn/shop/files/Group_1000009184_1.webp?v=1741239071&width=500" alt="Sleep Company Product" class="responsive-img">
-
         <div class="intro">
             <h2>Travel the World Affordably</h2>
             <p>At Fly to Flights, we bring you the cheapest flight tickets to destinations worldwide. Whether it’s a quick getaway or an international adventure, our expert team ensures you save big without compromising on quality.</p>
@@ -464,17 +495,17 @@
                     <p>From $349 - Discover the City of Love</p>
                 </div>
                 <div class="destination-card">
-                    <img src="https://i.natgeofe.com/n/ff6bc870-1700-4a2f-87a2-2955abd83794/h_25.539224.jpg" alt="London">
+                    <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac914?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="London">
                     <h3>London</h3>
                     <p>From $299 - Explore Historic Charm</p>
                 </div>
                 <div class="destination-card">
-                    <img src="https://hips.hearstapps.com/hmg-prod/images/high-angle-view-of-tokyo-skyline-at-dusk-japan-royalty-free-image-1664309926.jpg" alt="Tokyo">
+                    <img src="https://images.unsplash.com/photo-1529963183134-0a8b6e8181a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Tokyo">
                     <h3>Tokyo</h3>
                     <p>From $599 - Experience Futuristic Vibes</p>
                 </div>
                 <div class="destination-card">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbO9UIAqe41KEgXm5xvaaSVNRcCdPBxy7JQA&s" alt="New York">
+                    <img src="https://images.unsplash.com/photo-1485738422979-f5e516f53cb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="New York">
                     <h3>New York</h3>
                     <p>From $199 - The City That Never Sleeps</p>
                 </div>
@@ -489,7 +520,7 @@
 
     <div class="overlay" id="overlay"></div>
     <div class="dialog" id="dialog">
-        <h2>✈️ 50-77% OFF Discounted Flights</h2>
+        <h2>✈️ No Flights Found</h2>
         <p id="dialog-message"></p>
         <p>Please call our support team for assistance:</p>
         <a href="tel:+1-860-706-8539" class="call-btn">📞 Call: +1-860-706-8539</a>
@@ -502,7 +533,6 @@
     </div>
 
     <script>
-        // Dialog functions
         function showDialog(message) {
             document.getElementById('dialog-message').textContent = message;
             document.getElementById('dialog').style.display = 'block';
@@ -526,14 +556,12 @@
 
         document.getElementById('overlay').addEventListener('click', hideDialog);
 
-        // Toggle Return Date visibility
         function toggleReturnDate() {
             const tripType = document.querySelector('input[name="trip-type"]:checked').value;
             const returnDateGroup = document.getElementById('return-date-group');
             returnDateGroup.style.display = tripType === 'round' ? 'block' : 'none';
         }
 
-        // Search flights function with loading
         function searchFlights() {
             const fromInput = document.getElementById('from-airport').value;
             const toInput = document.getElementById('to-airport').value;
@@ -554,15 +582,14 @@
 
                 let message = '';
                 if (tripType === 'round') {
-                    message = `Round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
+                    message = `No round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
                 } else {
-                    message = `One-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
+                    message = `No one-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
                 }
                 showDialog(message);
             }, 3000);
         }
 
-        // Fetch and populate airports
         let allAirports = [];
         async function loadAirports() {
             try {
@@ -591,7 +618,14 @@
             }
         }
 
-        // Filter airports
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
         function filterAirports(type) {
             const input = document.getElementById(`${type}-airport`);
             const datalist = document.getElementById(`${type}-options`);
@@ -604,30 +638,17 @@
                     .filter(airport => airport.toLowerCase().includes(value))
                     .slice(0, 20);
 
-                filtered.forEach(airport => {
-                    const option = document.createElement('option');
-                    option.value = airport;
-                    option.text = airport;
-                    datalist.appendChild(option);
-                });
+                const optionsHTML = filtered.map(airport => `<option value="${airport}">`).join('');
+                datalist.innerHTML += optionsHTML;
             }
-        }
-
-        // Debounce function
-        function debounce(func, delay) {
-            let timeoutId;
-            return function (...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(this, args), delay);
-            };
         }
 
         const debouncedFilterAirports = debounce(filterAirports, 300);
 
-        // Load airports and set initial state on page load
         window.onload = async function() {
             await loadAirports();
             toggleReturnDate();
+
             document.getElementById('from-airport').addEventListener('input', () => debouncedFilterAirports('from'));
             document.getElementById('to-airport').addEventListener('input', () => debouncedFilterAirports('to'));
         };
