@@ -776,5 +776,61 @@
             toggleReturnDate();
         };
     </script>
+        <script>
+    // Function to update the displayed date and calendar icon
+    function updateDateDisplay(type) {
+        const dateInput = document.getElementById(`${type}-date`);
+        const dateDisplay = document.getElementById(`${type}-display`);
+        const monthElement = document.getElementById(`${type}-month`);
+        const dayElement = document.getElementById(`${type}-day`);
+        
+        if (dateInput && dateDisplay) {
+            const selectedDate = new Date(dateInput.value);
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            dateDisplay.textContent = selectedDate.toLocaleDateString('en-US', options);
+            
+            // Update the calendar icon
+            if (monthElement && dayElement) {
+                const monthName = selectedDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                const dayNumber = selectedDate.getDate();
+                
+                monthElement.textContent = monthName;
+                dayElement.textContent = dayNumber;
+            }
+        }
+    }
+    
+    // Initialize calendar icons and date displays based on default dates
+    function initializeDatePickers() {
+        // Initialize both date pickers
+        updateDateDisplay('departure');
+        updateDateDisplay('return');
+        
+        // Set up event listeners for date changes
+        document.getElementById('departure-date').addEventListener('change', function() {
+            updateDateDisplay('departure');
+        });
+        
+        document.getElementById('return-date').addEventListener('change', function() {
+            updateDateDisplay('return');
+        });
+    }
+    
+    // Make sure the initialization happens after the page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeDatePickers);
+    } else {
+        initializeDatePickers();
+    }
+    
+    // Add this to your existing window.onload function while preserving other functionality
+    const originalOnload = window.onload;
+    window.onload = function() {
+        if (typeof originalOnload === 'function') {
+            originalOnload();
+        }
+        initializeDatePickers();
+    };
+</script>
 </body>
 </html>
