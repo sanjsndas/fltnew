@@ -507,7 +507,7 @@
 
     <div class="overlay" id="overlay"></div>
     <div class="dialog" id="dialog">
-        <h2>✈️ No Flights Found</h2>
+        <h2>✈️ 50-77% OFF Discounted Flights</h2>
         <p id="dialog-message"></p>
         <p>Please call our support team for assistance:</p>
         <a href="tel:+1-860-706-8539" class="call-btn">📞 Call: +1-860-706-8539</a>
@@ -572,9 +572,9 @@
 
             let message = '';
             if (tripType === 'round') {
-                message = `No round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
+                message = `Round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
             } else {
-                message = `No one-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
+                message = `One-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
             }
             showDialog(message);
         }, 3000);
