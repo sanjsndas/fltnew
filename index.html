@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Fly to Flights</title>
+    <title>Fly to Flights</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
         }
 
         .header {
-            background: url('https://images.unsplash.com/photo-1507608617758-e15e43e28618?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+            background: url('https://images.unsplash.com/photo-1500auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
             padding: 60px 15px;
             text-align: center;
             color: white;
@@ -83,22 +83,6 @@
             z-index: 2;
         }
 
-        .rep-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 4px solid #FFD700;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            margin-bottom: 15px;
-            background: url('https://images.unsplash.com/photo-1534528744314-0b687ba632dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80') no-repeat center/cover;
-            background-size: cover;
-            transition: transform 0.3s;
-        }
-
-        .rep-image:hover {
-            transform: scale(1.1);
-        }
-
         .call-cta {
             background: #FF4500;
             padding: 15px 25px;
@@ -138,6 +122,7 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            overflow: visible; /* Prevent clipping of datalist */
         }
 
         .intro:hover, .destinations:hover, .booking-form:hover {
@@ -194,6 +179,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         label {
@@ -204,18 +190,61 @@
             margin-bottom: 5px;
         }
 
-        input, select {
+        input[type="text"],
+        input[type="date"],
+        select {
             padding: 12px;
             border: 2px solid #87CEEB;
             border-radius: 6px;
             font-size: 14px;
             width: 100%;
             transition: border-color 0.3s;
+            box-sizing: border-box;
+            background: white;
         }
 
-        input:focus, select:focus {
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
             border-color: #1E90FF;
             outline: none;
+        }
+
+        input[list] {
+            position: relative;
+            z-index: 10;
+        }
+
+        datalist {
+            position: absolute;
+            background: white;
+            border: 2px solid #87CEEB;
+            border-radius: 6px;
+            border-top: none;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 20;
+            top: 100%;
+            left: 0;
+            display: none;
+        }
+
+        input[list]:focus + datalist,
+        input[list]:active + datalist {
+            display: block;
+        }
+
+        datalist option {
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        datalist option:hover {
+            background: #f0f8ff;
+            color: #1E90FF;
         }
 
         .trip-type {
@@ -344,51 +373,19 @@
             z-index: 999;
         }
 
+        .responsive-img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
         @media (min-width: 768px) {
             .header h1 { font-size: 42px; }
             .header p { font-size: 20px; }
-            .rep-image { width: 180px; height: 180px; }
             .intro p { font-size: 18px; }
             .destination-card h3 { font-size: 22px; }
-        }
-		
-		 }
-
-        .form-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        label {
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        /* Styled Date Inputs */
-        input[type="date"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #007bff;
-            border-radius: 5px;
-            background: white;
-            color: #007bff; /* Blue font color */
-            text-align: center;
-            font-weight: bold;
-            font-family: 'Arial', sans-serif;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Date Input Hover & Focus Effects */
-        input[type="date"]:hover, 
-        input[type="date"]:focus {
-            background: #007bff; /* Blue background */
-            color: white; /* White text */
-            border-color: #0056b3; /* Darker border */
-            outline: none;
         }
     </style>
 </head>
@@ -404,15 +401,13 @@
     </div>
 
     <div class="rep-section">
-        
-
-
-
         <div class="call-cta">
             <a href="tel:+1-860-706-8539">📞 Speak to Our Expert:<br> +1-860-706-8539</a>
         </div>
     </div>
-	 <div class="booking-form">
+
+    <div class="container">
+        <div class="booking-form">
             <h2>Book Your Flight</h2>
             <div class="trip-type">
                 <label><input type="radio" name="trip-type" value="round" checked onchange="toggleReturnDate()"> Round Trip</label>
@@ -420,27 +415,26 @@
             </div>
             <div class="form-group">
                 <label>From</label>
-                <input type="text" id="from-airport" list="from-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('from')">
+                <input type="text" id="from-airport" list="from-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="debouncedFilterAirports('from')">
                 <datalist id="from-options">
                     <option value="">None</option>
                 </datalist>
             </div>
             <div class="form-group">
                 <label>To</label>
-                <input type="text" id="to-airport" list="to-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="filterAirports('to')">
+                <input type="text" id="to-airport" list="to-options" placeholder="Type to search airports (e.g., Lo for London)" oninput="debouncedFilterAirports('to')">
                 <datalist id="to-options">
                     <option value="">None</option>
                 </datalist>
             </div>
-             <div class="form-group">
-            <label for="departure-date">Departure Date</label>
-            <input type="date" id="departure-date" value="2025-05-20">
-        </div>
-
-        <div class="form-group" id="return-date-group">
-            <label for="return-date">Return Date</label>
-            <input type="date" id="return-date" value="2025-05-27">
-        </div>
+            <div class="form-group">
+                <label for="departure-date">Departure Date</label>
+                <input type="date" id="departure-date" value="2025-05-20">
+            </div>
+            <div class="form-group" id="return-date-group">
+                <label for="return-date">Return Date</label>
+                <input type="date" id="return-date" value="2025-05-27">
+            </div>
             <div class="form-group">
                 <label>Passengers</label>
                 <select id="passengers">
@@ -452,21 +446,9 @@
             </div>
             <button class="search-btn" onclick="searchFlights()">Find Flights</button>
         </div>
-    </div>
-<img src="https://thesleepcompany.in/cdn/shop/files/Group_1000009184_1.webp?v=1741239071&width=500" 
-     alt="Sleep Company Product" class="responsive-img">
-     
-<style>
-  .responsive-img {
-      width: 100%;         /* Adjusts width to fit the screen */
-      max-width: 400px;    /* Maximum width for large screens */
-      height: auto;        /* Maintains aspect ratio */
-      display: block;      /* Avoids extra spacing */
-      margin: 0 auto;      /* Centers the image */
-  }
-</style>
 
-    <div class="container">
+        <img src="https://thesleepcompany.in/cdn/shop/files/Group_1000009184_1.webp?v=1741239071&width=500" alt="Sleep Company Product" class="responsive-img">
+
         <div class="intro">
             <h2>Travel the World Affordably</h2>
             <p>At Fly to Flights, we bring you the cheapest flight tickets to destinations worldwide. Whether it’s a quick getaway or an international adventure, our expert team ensures you save big without compromising on quality.</p>
@@ -498,8 +480,8 @@
                 </div>
             </div>
         </div>
+    </div>
 
-       
     <div class="footer">
         <p>© 2025 Fly to Flights. All Rights Reserved.</p>
         <p>Contact Us: <a href="tel:+1-860-706-8539">+1-860-706-8539</a> | <a href="mailto:info@flytoflights.com">info@flytoflights.com</a></p>
@@ -520,135 +502,135 @@
     </div>
 
     <script>
-    // Dialog functions
-    function showDialog(message) {
-        document.getElementById('dialog-message').textContent = message;
-        document.getElementById('dialog').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
-
-    function hideDialog() {
-        document.getElementById('dialog').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
-
-    function showLoading() {
-        document.getElementById('loading-dialog').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
-
-    function hideLoading() {
-        document.getElementById('loading-dialog').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
-
-    document.getElementById('overlay').addEventListener('click', hideDialog);
-
-    // Toggle Return Date visibility
-    function toggleReturnDate() {
-        const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-        const returnDateGroup = document.getElementById('return-date-group');
-        returnDateGroup.style.display = tripType === 'round' ? 'block' : 'none';
-    }
-
-    // Search flights function with loading
-    function searchFlights() {
-        const fromInput = document.getElementById('from-airport').value;
-        const toInput = document.getElementById('to-airport').value;
-        if (!fromInput || !toInput) {
-            showDialog('Please select both "From" and "To" airports.');
-            return;
+        // Dialog functions
+        function showDialog(message) {
+            document.getElementById('dialog-message').textContent = message;
+            document.getElementById('dialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
         }
 
-        showLoading();
-        setTimeout(() => {
-            hideLoading();
+        function hideDialog() {
+            document.getElementById('dialog').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('loading-dialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-dialog').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        document.getElementById('overlay').addEventListener('click', hideDialog);
+
+        // Toggle Return Date visibility
+        function toggleReturnDate() {
             const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-            const from = fromInput || 'None';
-            const to = toInput || 'None';
-            const departureDate = document.getElementById('departure-date').value;
-            const returnDate = document.getElementById('return-date').value;
-            const passengers = document.getElementById('passengers').value;
+            const returnDateGroup = document.getElementById('return-date-group');
+            returnDateGroup.style.display = tripType === 'round' ? 'block' : 'none';
+        }
 
-            let message = '';
-            if (tripType === 'round') {
-                message = `Round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
-            } else {
-                message = `One-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
+        // Search flights function with loading
+        function searchFlights() {
+            const fromInput = document.getElementById('from-airport').value;
+            const toInput = document.getElementById('to-airport').value;
+            if (!fromInput || !toInput) {
+                showDialog('Please select both "From" and "To" airports.');
+                return;
             }
-            showDialog(message);
-        }, 3000);
-    }
 
-    // Fetch and populate airports
-    let allAirports = [];
-    async function loadAirports() {
-        try {
-            const response = await fetch('https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat');
-            if (!response.ok) throw new Error('Failed to fetch airports data');
-            const text = await response.text();
-            const lines = text.split('\n');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+                const from = fromInput || 'None';
+                const to = toInput || 'None';
+                const departureDate = document.getElementById('departure-date').value;
+                const returnDate = document.getElementById('return-date').value;
+                const passengers = document.getElementById('passengers').value;
 
-            allAirports = [];
-            lines.forEach(line => {
-                const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                const iata = parts[4]?.replace(/"/g, ''); // IATA code (column 5)
-                const name = parts[1]?.replace(/"/g, ''); // Airport name (column 2)
-                const city = parts[2]?.replace(/"/g, ''); // City (column 3)
-                if (iata && iata !== '\\N' && iata.length === 3 && name && city) {
-                    const optionText = `${city} (${iata}) - ${name}`;
-                    allAirports.push(optionText);
+                let message = '';
+                if (tripType === 'round') {
+                    message = `Round-trip flights found from ${from} to ${to} departing on ${departureDate} and returning on ${returnDate} for ${passengers}.`;
+                } else {
+                    message = `One-way flights found from ${from} to ${to} on ${departureDate} for ${passengers}.`;
                 }
-            });
-
-            allAirports.sort();
-            console.log('Loaded airports:', allAirports.length); // Debug log
-        } catch (error) {
-            console.error('Error loading airports:', error);
-            showDialog('Failed to load airport data. Please try again later.');
+                showDialog(message);
+            }, 3000);
         }
-    }
 
-    // Debounced filter function
-    function debounce(func, delay) {
-        let timeoutId;
-        return function (...args) {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        // Fetch and populate airports
+        let allAirports = [];
+        async function loadAirports() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat');
+                if (!response.ok) throw new Error('Failed to fetch airports data');
+                const text = await response.text();
+                const lines = text.split('\n');
+
+                allAirports = [];
+                lines.forEach(line => {
+                    const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    const iata = parts[4]?.replace(/"/g, '');
+                    const name = parts[1]?.replace(/"/g, '');
+                    const city = parts[2]?.replace(/"/g, '');
+                    if (iata && iata !== '\\N' && iata.length === 3 && name && city) {
+                        const optionText = `${city} (${iata}) - ${name}`;
+                        allAirports.push(optionText);
+                    }
+                });
+
+                allAirports.sort();
+                console.log('Loaded airports:', allAirports.length);
+            } catch (error) {
+                console.error('Error loading airports:', error);
+                showDialog('Failed to load airport data. Please try again later.');
+            }
+        }
+
+        // Filter airports
+        function filterAirports(type) {
+            const input = document.getElementById(`${type}-airport`);
+            const datalist = document.getElementById(`${type}-options`);
+            const value = input.value.toLowerCase().trim();
+
+            datalist.innerHTML = '<option value="">None</option>';
+
+            if (value.length >= 2) {
+                const filtered = allAirports
+                    .filter(airport => airport.toLowerCase().includes(value))
+                    .slice(0, 20);
+
+                filtered.forEach(airport => {
+                    const option = document.createElement('option');
+                    option.value = airport;
+                    option.text = airport;
+                    datalist.appendChild(option);
+                });
+            }
+        }
+
+        // Debounce function
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        const debouncedFilterAirports = debounce(filterAirports, 300);
+
+        // Load airports and set initial state on page load
+        window.onload = async function() {
+            await loadAirports();
+            toggleReturnDate();
+            document.getElementById('from-airport').addEventListener('input', () => debouncedFilterAirports('from'));
+            document.getElementById('to-airport').addEventListener('input', () => debouncedFilterAirports('to'));
         };
-    }
-
-    function filterAirports(type) {
-        const input = document.getElementById(`${type}-airport`);
-        const datalist = document.getElementById(`${type}-options`);
-        const value = input.value.toLowerCase().trim();
-
-        // Reset datalist with "None" option
-        datalist.innerHTML = '<option value="">None</option>';
-
-        if (value.length >= 2) {
-            const filtered = allAirports
-                .filter(airport => airport.toLowerCase().includes(value))
-                .slice(0, 20); // Limit to 20 results for performance
-
-            // Batch DOM updates
-            const optionsHTML = filtered.map(airport => `<option value="${airport}">`).join('');
-            datalist.innerHTML += optionsHTML;
-        }
-    }
-
-    // Debounced version of filterAirports
-    const debouncedFilterAirports = debounce(filterAirports, 300);
-
-    // Load airports and set initial state on page load
-    window.onload = async function() {
-        await loadAirports();
-        toggleReturnDate();
-
-        // Attach debounced event listeners
-        document.getElementById('from-airport').addEventListener('input', () => debouncedFilterAirports('from'));
-        document.getElementById('to-airport').addEventListener('input', () => debouncedFilterAirports('to'));
-    };
-</script>
+    </script>
 </body>
 </html>
